@@ -1,3 +1,45 @@
+<?php
+$array_login=[];
+if (isset($_POST['btn'])) {
+    include_once "../traitement/fonctions.php";
+    $prenom=$_POST['prenom'];
+    $nom=$_POST['nom'];
+    $login=$_POST['login'];
+    $pwd1=password_hash($_POST['pwd1'],PASSWORD_DEFAULT);
+    $pwd2=password_hash($_POST['pwd2'],PASSWORD_DEFAULT);
+    $image=$_POST['file'];
+    if (!empty($login)) {
+        if ($pwd1==$pwd2) {
+            if (connexion_bd()) {
+                $sql1="SELECT login FROM utilisateur WHERE role='joueur'";
+                $req1=mysqli_query(connexion_bd(),$sql1);
+                if(!$req1) echo "Requete invalide:".mysql_error();
+                if (mysqli_num_rows($req1)>0) {
+                    while ($row=mysqli_fetch_array($req1,MYSQLI_ASSOC)) {
+                        array_push($array_login,$row);
+                    }
+                    var_dump($array_login);
+                        foreach ($array_login as $value) {
+                            var_dump($value);
+                        if ($value['login']==$login) {
+                            $message="Ce login existe!!";
+                        }else {
+                            $sql2="INSERT INTO utilisateur (`nom`,`prenom`,`login`,`password`,`role`,`score`,`image`) VALUES ('$nom','$prenom',$login,'$pwd1','joueur','0','$image')";
+                            $result=mysqli_query(connexion_bd(),$sql2);
+                            if (!$result) {
+                                die ("Probleme : ".mysqli_error(connexion_bd()));
+                            }else {
+                                header("Location:../index.php");
+                                mysqli_close(connexion_bd());
+                            }
+                    }
+            }
+        }
+        }
+    }
+}
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,14 +70,14 @@
             </div>
             <div class="control">
                 <input type="text" class="input-form" error="error-3" name="login" id="" placeholder="Login">
-                <span class="error-form" id="error-3"></span>
+                <span class="error-form" id="error-3"><?=isset($message)?$message:""?></span>
             </div>
             <div class="control">
-                <input type="text" class="input-form" error="error-4" name="pwd1" id="pwd1" placeholder="Password">
+                <input type="password" class="input-form" error="error-4" name="pwd1" id="pwd1" placeholder="Password">
                 <span class="error-form" id="error-4"></span>
             </div>
             <div class="control">
-                <input type="text" class="input-form" error="error-5" name="pwd2" id="pwd2" placeholder="Confirm Password">
+                <input type="password" class="input-form" error="error-5" name="pwd2" id="pwd2" placeholder="Confirm Password">
                 <span class="error-form" id="error-5"></span>
             </div>
             <div class="control" id="div-avatar">

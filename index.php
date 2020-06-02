@@ -1,3 +1,42 @@
+<?php
+session_start();
+if (isset($_POST['connexion'])) {
+    include_once "traitement/fonctions.php";
+    if (empty($_POST['login'])) {
+        $message_login="Ce champ est obligatoire";
+    }else {
+        if (empty($_POST['pwd'])) {
+            $message_pwd="Ce champ est obligatoire";
+        }else{
+            $login=$_POST['login'];
+            $pwd=$_POST['pwd'];
+            if (!connexion_bd()) {
+                echo "ERREUR!!!";
+            }else {
+            $sql="SELECT * FROM utilisateur WHERE login='$login' AND password='$pwd' ";
+            $req=mysqli_query(connexion_bd(),$sql);
+            if(!$req) echo "Requete invalide:".mysql_error();
+            if (mysqli_num_rows($req)) {
+                $row=mysqli_fetch_object($req);
+                $_SESSION['prenom']=$row->prenom;
+                $_SESSION['nom']=$row->nom;
+                $_SESSION['role']=$row->role;
+                $_SESSION['image']=$row->image;
+                var_dump($_SESSION['role']);
+                if ($_SESSION['role']=="admin") {
+                   return header("Location:pages/accueil.php");
+                }else {
+                   return header("Location:pages/jeu.php");
+                }
+            }else {
+                $message_login="Login oun mot de passe Incorrect";
+            }
+        }
+        }
+    }
+}
+//session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,23 +51,23 @@
     <div class="logo"><img src="public/images/logo.png" alt="error" /></div>
     <h1>BIENVENUE SUR LE SITE DE QUIZZ</h1>
     </header>
-    <div class="contenu">
+    <div class="container-fluid">
     <div class="section1">
         <div class="ssection1">
             <h2>Connectez-vous</h2>
             <form action="" method="post" id="myform">
-                <div class="control">
+                <div class="form-control">
                     <label for="" class="label">Login</label>
-                    <input type="text" error="error-1" class="input" name="nom" id="login">
-                    <div class="error-form" id="error-1"></div>
+                    <input type="text" error="error-1" class="input" name="login" id="login">
+                    <div class="error-form" id="error-1"><?= isset($message_login)?$message_login:""?></div>
                 </div>
-                <div class="control">
+                <div class="form-control">
                     <label for="" class="label">Mot de Passe</label>
                     <input type="password" error="error-2" class="input" name="pwd" id="pwd">
-                    <div class="error-form" id="error-2"></div>
+                    <div class="error-form" id="error-2"><?= isset($message_pwd)?$message_pwd:""?></div>
                 </div>
-                <div class="control">
-                    <input type="submit" value="Connexion" class="btn-submit" name="btn" id="">
+                <div class="form-control">
+                    <input type="submit" value="Connexion" class="btn" name="connexion" id="">
                 </div>
             </form>
         </div>

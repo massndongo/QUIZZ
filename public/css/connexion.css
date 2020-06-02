@@ -17,14 +17,14 @@ header{
     width: 100%;
     height: 100%;
 }
-.contenu{
+.container-fluid{
     width: 100%;
     height: 80%;
     float: left;
 }
 .section1{
     width: 60%;
-    height: 400px;
+    height: auto;
     background-color: #ebe0c2;
     float: left;
 }
@@ -80,7 +80,8 @@ form{
     margin-left: 100px;
     padding-top: 20px;
 }
-.control{
+.form-control{
+    background-color: none;
     width: 60%;
     height: 10%;
     padding: 10px;
@@ -106,7 +107,7 @@ form{
     font-size: 16px;
     font-weight: bold;
 }
-.btn-submit {
+.btn {
     background-color: #ffba00;
     border: 1px solid #ffba00;
     color: white;
