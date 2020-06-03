@@ -24,13 +24,19 @@
         <div class="menu">
             <ul class="ul-group">
                 <li><a href="">Liste joueurs</a></li>
-                <li><a href="">Créer Admin</a></li>
+                <li><a href="accueil.php?page=ca">Créer Admin</a></li>
                 <li><a href="">Liste Questions</a></li>
                 <li><a href="">Créer Questions</a></li>
             </ul>
         </div>
-        <div class="contenu">
-            
+        <div class="container contenu">
+            <?php
+                if (isset($_GET['page'])) {
+                    if ($_GET['page']=='ca') {
+                        require_once "inscriptiona.php";
+                    }
+                }
+            ?>
         </div>
     </div>
 </body>

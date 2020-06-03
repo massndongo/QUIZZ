@@ -24,7 +24,7 @@ header{
 }
 .section1{
     width: 60%;
-    height: auto;
+    height: 400px;
     background-color: #ebe0c2;
     float: left;
 }
@@ -80,7 +80,7 @@ form{
     margin-left: 100px;
     padding-top: 20px;
 }
-.form-control{
+.control{
     background-color: none;
     width: 60%;
     height: 10%;

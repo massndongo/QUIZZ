@@ -87,6 +87,7 @@ header{
     position: relative;
     top: 20px;
     width: 70%;
+    height: auto;
     margin: auto;
     border-radius: 5px;
     border: 4px solid #ebe0c2;

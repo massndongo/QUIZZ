@@ -10,32 +10,30 @@ if (isset($_POST['connexion'])) {
         }else{
             $login=$_POST['login'];
             $pwd=$_POST['pwd'];
-            if (!connexion_bd()) {
-                echo "ERREUR!!!";
-            }else {
-            $sql="SELECT * FROM utilisateur WHERE login='$login' AND password='$pwd' ";
-            $req=mysqli_query(connexion_bd(),$sql);
-            if(!$req) echo "Requete invalide:".mysql_error();
-            if (mysqli_num_rows($req)) {
-                $row=mysqli_fetch_object($req);
-                $_SESSION['prenom']=$row->prenom;
-                $_SESSION['nom']=$row->nom;
-                $_SESSION['role']=$row->role;
-                $_SESSION['image']=$row->image;
-                var_dump($_SESSION['role']);
+            $bdd=connexion_bd();
+            $query = $bdd->prepare('SELECT * FROM utilisateur WHERE login=? AND password=?');
+            $query->execute(array($login,$pwd));
+            $result=$query->rowCount();
+            if ($result==1) {
+                var_dump($result);
+                var_dump($data=$query->fetch(PDO::FETCH_ASSOC));
+                $_SESSION['nom']=$data['nom'];
+                $_SESSION['prenom']=$data['prenom'];
+                $_SESSION['image']=$data['image'];
+                $_SESSION['login']=$data['login'];
+                $_SESSION['role']=$data['role'];
                 if ($_SESSION['role']=="admin") {
-                   return header("Location:pages/accueil.php");
+                    header('Location:pages/accueil.php');
                 }else {
-                   return header("Location:pages/jeu.php");
+                    $_SESSION['score']=$data['score'];
+                    header('Location:pages/jeu.php');
                 }
-            }else {
-                $message_login="Login oun mot de passe Incorrect";
             }
         }
         }
     }
-}
 //session_destroy();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +45,7 @@ if (isset($_POST['connexion'])) {
     <title>Connexion Admin</title>
 </head>
 <body>
-    <header>
+    <header class="container-fluid">
     <div class="logo"><img src="public/images/logo.png" alt="error" /></div>
     <h1>BIENVENUE SUR LE SITE DE QUIZZ</h1>
     </header>
@@ -56,17 +54,17 @@ if (isset($_POST['connexion'])) {
         <div class="ssection1">
             <h2>Connectez-vous</h2>
             <form action="" method="post" id="myform">
-                <div class="form-control">
+                <div class="control form-control">
                     <label for="" class="label">Login</label>
                     <input type="text" error="error-1" class="input" name="login" id="login">
                     <div class="error-form" id="error-1"><?= isset($message_login)?$message_login:""?></div>
                 </div>
-                <div class="form-control">
+                <div class="form-control control">
                     <label for="" class="label">Mot de Passe</label>
                     <input type="password" error="error-2" class="input" name="pwd" id="pwd">
                     <div class="error-form" id="error-2"><?= isset($message_pwd)?$message_pwd:""?></div>
                 </div>
-                <div class="form-control">
+                <div class="form-control control">
                     <input type="submit" value="Connexion" class="btn" name="connexion" id="">
                 </div>
             </form>

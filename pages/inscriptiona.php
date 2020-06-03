@@ -9,15 +9,15 @@ if (isset($_POST['btn'])) {
     $image=$_POST['file'];
     if (!empty($login)) {
         if ($pwd1==$pwd2) {
-            if (is_login($login)) {
+            if (is_admin($login)) {
                 $message="Ce login existe!!";
             }else {
                 $bdd=connexion_bd();
                 $res=$bdd->prepare("INSERT INTO utilisateur (`nom`,`prenom`,`login`,`password`,`role`,`score`,`image`) VALUES (?,?,?,?,?,?,?)");
-                $exec=$res->execute(array($nom,$prenom,$login,$pwd1,"joueur","0",$image));
+                $exec=$res->execute(array($nom,$prenom,$login,$pwd1,"admin","0",$image));
                 if ($exec) {
                     echo "Données insérées";
-                    header("Location:../index.php");    
+                    header("Location: accueil.php");
                     }else {
                         echo "Données non insérées";
                     }
@@ -27,12 +27,13 @@ if (isset($_POST['btn'])) {
     }
 }
 ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/css/inscriptionj.css">
+    <link rel="stylesheet" href="../public/css/inscriptiona.css">
     <title>PAGE INSCRIIPTION</title>
     <script type='text/javascript'>
     function load_image(avatar) {
@@ -42,42 +43,39 @@ if (isset($_POST['btn'])) {
     </script>
 </head>
 <body>
-     <div class="container-fluid">
-    <div class="logo"><img src="../public/images/logo.png" alt="error" /></div>
-    <div class="container contenu">
+     <div class="contenue">
         <h1>Créer un Compte</h1>
         <form action="" method="post" id="myform">
-            <div class="form-control control">
+            <div class="control">
                 <input type="number" name="score" hidden="hidden" id="">
                 <input type="text" class="input-form" error="error-1" name="prenom" id="" placeholder="Prenoms">
                 <span class="error-form" id="error-1"></span>
             </div>
-            <div class="form-control control">
+            <div class="control">
                 <input type="text" class="input-form" error="error-2" name="nom" id="" placeholder="Nom">
                 <span class="error-form" id="error-2"></span>
             </div>
-            <div class="form-control control">
+            <div class="control">
                 <input type="text" class="input-form" error="error-3" name="login" id="" placeholder="Login">
-                <span class="error-form" id="error-3"><?= isset($message) ? $message : "" ?></span>
+                <span class="error-form" id="error-3"><?=isset($message)?$message:""?></span>
             </div>
-            <div class="form-control control">
+            <div class="control">
                 <input type="password" class="input-form" error="error-4" name="pwd1" id="pwd1" placeholder="Password">
                 <span class="error-form" id="error-4"></span>
             </div>
-            <div class="form-control control">
+            <div class="control">
                 <input type="password" class="input-form" error="error-5" name="pwd2" id="pwd2" placeholder="Confirm Password">
                 <span class="error-form" id="error-5"></span>
             </div>
-            <div class="form-control control" id="div-avatar">
+            <div class="control" id="div-avatar">
                 <label class="btn-file">Avatar</label>
                 <input type="file"  accept="image/jpeg, image/png" onchange="load_image(this)" name="file" id="fichier">
             <div class="avatar-img"><img src="" style="width:100%;height:100%; border-radius:60%" id="img" alt=""></div>
             </div>
-            <div class="form-control control">
+            <div class="control">
                 <input type="submit" value="Connexion" class="btn btn-submit" name="btn" id="">
             </div>
         </form>
-    </div>
     <script>
 const inputs=document.getElementsByTagName("input");
 for(input of inputs){
