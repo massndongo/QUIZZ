@@ -11,7 +11,7 @@ if (isset($_POST['connexion'])) {
             $login=$_POST['login'];
             $pwd=$_POST['pwd'];
             $bdd=connexion_bd();
-            $query = $bdd->prepare('SELECT * FROM utilisateur WHERE login=? AND password=?');
+            $query = $bdd->prepare('SELECT * FROM `utilisateur` WHERE login=? AND password=?');
             $query->execute(array($login,$pwd));
             $result=$query->rowCount();
             if ($result==1) {
@@ -40,9 +40,10 @@ if (isset($_POST['connexion'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/css/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/bootstrap-4.5.0-dist/css/bootstrap.css">
     <link rel="stylesheet" href="public/css/connexion.css">
-    <title>Connexion Admin</title>
+    <script src="public/js/jquery.js"></script>
+    <title>Connexion</title>
 </head>
 <body>
     <header class="container-fluid">
@@ -65,7 +66,7 @@ if (isset($_POST['connexion'])) {
                     <div class="error-form" id="error-2"><?= isset($message_pwd)?$message_pwd:""?></div>
                 </div>
                 <div class="form-control control">
-                    <input type="submit" value="Connexion" class="btn" name="connexion" id="">
+                    <input type="submit" value="Connexion" class="btn" name="connexion" id="btn">
                 </div>
             </form>
         </div>
@@ -76,34 +77,19 @@ if (isset($_POST['connexion'])) {
     </div>
     </div>
     <script>
-const inputs=document.getElementsByTagName("input");
-for(input of inputs){
-   input.addEventListener("keyup", function (e) {
-     if(e.target.hasAttribute("error")) {
-         var idDivError=e.target.getAttribute("error")
-         document.getElementById(idDivError).innerText=""
-     }
-   })
+    $(document).ready(function(){
+$("form").submit(function(event){
+/*Si la longueur de la valeur du champ #prenom est 0 (c'est-à-dire si
+le champ n'a pas été rempli), on affiche un message et on empêche
+l'envoi*/
+if($("input").val().length === 0){
+$(".error-form").html("Ce champ est obligatoire");
+event.preventDefault();
+}else{
+//On effectue nos requêtes Ajax, sérialise, etc...
+let chaine = $("form").serialize();
 }
-
-document.getElementById("myform").addEventListener("submit", function(e){
-const inputs=document.getElementsByTagName("input");
-    var error=false;
-    for(input of inputs){
-        if (input.hasAttribute("error")) {
-            var idDivError=input.getAttribute("error");
-            if (!(input.value)) {
-                error=true;
-                document.getElementById(idDivError).innerText="Ce champ est obligatoire";
-            }
-        }
-    }
-    if (error) {
-        e.preventDefault();
-        return false;
-    }
-    
-})
+});});
 </script>
 </body>
 </html>

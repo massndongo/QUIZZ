@@ -1,9 +1,9 @@
 <?php
 function connexion_bd(){
-    $host = 'localhost';
-    $dbname = 'quizz';
-    $username = 'root';
-    $password = '';
+    $host = 'mysql-massam.alwaysdata.net';
+    $dbname = 'massam_quizz';
+    $username = 'massam';
+    $password = 'L@coste90';
       try {
       // se connecter à mysql
       $pdo = new PDO("mysql:host=$host;dbname=$dbname","$username","$password");

@@ -1,32 +1,3 @@
-<?php
-if (isset($_POST['btn'])) {
-    include_once "../traitement/fonctions.php";
-    $prenom=$_POST['prenom'];
-    $nom=$_POST['nom'];
-    $login=$_POST['login'];
-    $pwd1=$_POST['pwd1'];
-    $pwd2=$_POST['pwd2'];
-    $image=$_POST['file'];
-    if (!empty($login)) {
-        if ($pwd1==$pwd2) {
-            if (is_login($login)) {
-                $message="Ce login existe!!";
-            }else {
-                $bdd=connexion_bd();
-                $res=$bdd->prepare("INSERT INTO utilisateur (`nom`,`prenom`,`login`,`password`,`role`,`score`,`image`) VALUES (?,?,?,?,?,?,?)");
-                $exec=$res->execute(array($nom,$prenom,$login,$pwd1,"joueur","0",$image));
-                if ($exec) {
-                    echo "Données insérées";
-                    header("Location:../index.php");    
-                    }else {
-                        echo "Données non insérées";
-                    }
-            }
-            
-        }
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,15 +20,15 @@ if (isset($_POST['btn'])) {
         <form action="" method="post" id="myform">
             <div class="form-control control">
                 <input type="number" name="score" hidden="hidden" id="">
-                <input type="text" class="input-form" error="error-1" name="prenom" id="" placeholder="Prenoms">
+                <input type="text" class="input-form" error="error-1" name="prenom" id="prenom" placeholder="Prenoms">
                 <span class="error-form" id="error-1"></span>
             </div>
             <div class="form-control control">
-                <input type="text" class="input-form" error="error-2" name="nom" id="" placeholder="Nom">
+                <input type="text" class="input-form" error="error-2" name="nom" id="nom" placeholder="Nom">
                 <span class="error-form" id="error-2"></span>
             </div>
             <div class="form-control control">
-                <input type="text" class="input-form" error="error-3" name="login" id="" placeholder="Login">
+                <input type="text" class="input-form" error="error-3" name="login" id="login" placeholder="Login">
                 <span class="error-form" id="error-3"><?= isset($message) ? $message : "" ?></span>
             </div>
             <div class="form-control control">
@@ -74,46 +45,38 @@ if (isset($_POST['btn'])) {
             <div class="avatar-img"><img src="" style="width:100%;height:100%; border-radius:60%" id="img" alt=""></div>
             </div>
             <div class="form-control control">
-                <input type="submit" value="Connexion" class="btn btn-submit" name="btn" id="">
+                <input type="submit" value="Connexion" class="btn btn-submit" name="btn" id="bouton">
             </div>
         </form>
     </div>
-    <script>
-const inputs=document.getElementsByTagName("input");
-for(input of inputs){
-   input.addEventListener("keyup", function (e) {
-     if(e.target.hasAttribute("error")) {
-         var idDivError=e.target.getAttribute("error")
-         document.getElementById(idDivError).innerText=""
-     }
-   })
-}
-
-document.getElementById("myform").addEventListener("submit", function(e){
-const inputs=document.getElementsByTagName("input");
-    var error=false;
-    for(input of inputs){
-        if (input.hasAttribute("error")) {
-            var idDivError=input.getAttribute("error");
-            if (!(input.value)) {
-                error=true;
-                document.getElementById(idDivError).innerText="Ce champ est obligatoire";
-            }else{
-                pwd1=document.getElementById('pwd1').value
-                pwd2=document.getElementById('pwd2').value
-                if(pwd1!=pwd2){
-                    document.getElementById('error-5').innerText="Mot de pass doit etre identique"
-                }
-            } 
-        }
-    }
-    if (error) {
-        e.preventDefault();
-        return false;
-    }
-    
-})
-</script>
 </div>
+<script src="../public/js/jquery.js"></script>
+    <script>
+    $(document).ready(function(){
+       
+       $('#bouton').on('click',function (e) {
+        let form= document.getElementById('myform');
+        let fd= new FormData(form);
+        if ($('#nom').val()=='' || $('#prenom').val()=='' || $('#login').val()==''|| $('#pwd1').val()=='' || $('#pwd2').val()=='') {
+            $('.error-form').html('Champ Obligatoire');
+            e.preventDefault();
+        }else{
+            $('#bouton').attr("disabled", "disabled");
+           $.ajax({
+            url:'sendJoueur.php',
+            type:'post',
+            data: fd,
+            processData:false,
+            contentType: false,
+            success: function (data, statut) {
+                if (data=="ok") {
+                    window.location.href = "../index.php";
+                    }
+                }
+           });
+        }
+       });
+    });
+    </script>
 </body>
 </html>

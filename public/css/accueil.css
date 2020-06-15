@@ -93,3 +93,12 @@ header{
     border: 4px solid #ebe0c2;
     background-color: #00000085;
 }
+.img-profil{
+    position: absolute;
+    left: 90%;
+    top: 78%;
+    width: 10%;
+    height: 40px;
+    border-radius: 70%;
+    border: 1px solid #ebe0c2;  
+}
